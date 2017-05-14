@@ -21,5 +21,10 @@
     "babelify": "^7.2.0",
     "uglifyify": "^3.0.4"
   },
+  "browserify": {
+    "transform": [
+      "babelify"
+    ]
+  },
   "homepage": "https://github.com/jennazee/tetres6#readme"
 }
