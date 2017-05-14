@@ -1,4 +1,4 @@
-import PURPLE from './constants.js';
+import {PURPLE} from './constants.js';
 import Piece from './piece.js';
 
 export default class OPiece extends Piece {

@@ -1,4 +1,4 @@
-import ORANGE from './constants.js';
+import {ORANGE} from './constants.js';
 import Piece from './piece.js';
 
 export default class ZPiece extends Piece {

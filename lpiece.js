@@ -1,4 +1,4 @@
-import MAGENTA from './constants.js';
+import {MAGENTA} from './constants.js';
 import Piece from './piece.js';
 
 export default class LPiece extends Piece {

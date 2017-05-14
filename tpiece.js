@@ -1,4 +1,4 @@
-import TURQUOISE from './constants.js';
+import {TURQUOISE} from './constants.js';
 import Piece from './piece.js';
 
 export default class TPiece extends Piece {

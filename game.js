@@ -124,7 +124,6 @@ export default class Game {
 		this.ctx.font = `${LARGE_FONT_SIZE} ${FONT_FAMILY}`;
 		this.ctx.fillStyle = RED;
 		this.ctx.fillText('Score: '+ this.scoreCounter, 20, this.gamePanelHeight+40, this.panelWidth-20);
-		this.ctx.fillStyle = TEAL;
 	}
 
 	setupKeyListeners() {
