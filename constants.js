@@ -6,6 +6,7 @@ export const COMMAKEY = 188;
 export const SPACEBAR = 32;
 
 export const SQWIDTH = 20;
+export const NUM_PIECE_SQS = 4;
 export const SCORE_PANEL_HEIGHT = 60;
 export const DIALOG_WIDTH = 300;
 export const DIALOG_HEIGHT = 150;

@@ -1,4 +1,4 @@
-import {SQWIDTH, CHARCOAL_GRAY, BLACK} from './constants.js';
+import {SQWIDTH, CHARCOAL_GRAY, BLACK, NUM_PIECE_SQS} from './constants.js';
 import StuckSquare from './stuckSquare.js';
 
 export default class Piece {
@@ -20,18 +20,19 @@ export default class Piece {
 	draw() {
 		this.ctx.strokeStyle = BLACK;
 		this.ctx.lineWidth = 2;
-		console.log(this, this.color);
 		this.ctx.fillStyle = this.color;
 
-		for (let i = 0; i < 4; i++) {
-			this.ctx.fillRect(this.sqArray[i][0] * this.width, this.sqArray[i][1] * this.width, this.width, this.width);
-			this.ctx.strokeRect(this.sqArray[i][0] * this.width, this.sqArray[i][1] * this.width, this.width, this.width);
+		const width = this.width;
+
+		for (let i = 0; i < NUM_PIECE_SQS; i++) {
+			this.ctx.fillRect(this.sqArray[i][0] * width, this.sqArray[i][1] * width, width, width);
+			this.ctx.strokeRect(this.sqArray[i][0] * width, this.sqArray[i][1] * width, width, width);
 		}
 	}
 
 	//smart pieces!!
 	checkValidDown() {
-		for (let i = 0; i < 4; i++) {
+		for (let i = 0; i < NUM_PIECE_SQS; i++) {
 			if (!!this.game.board[this.sqArray[i][0]][this.sqArray[i][1] + 1]) {
 				return false;
 			}
@@ -40,7 +41,7 @@ export default class Piece {
 	}
 
 	checkValidLeft() {
-		for (let i = 0; i < 4; i++) {
+		for (let i = 0; i < NUM_PIECE_SQS; i++) {
 			if (!!this.game.board[this.sqArray[i][0] - 1][this.sqArray[i][1]]) {
 				return false;
 			}
@@ -49,7 +50,7 @@ export default class Piece {
 	}
 
 	checkValidRight() {
-		for (let i = 0; i < 4; i++) {
+		for (let i = 0; i < NUM_PIECE_SQS; i++) {
 			if (this.game.board[this.sqArray[i][0] + 1][this.sqArray[i][1]]) {
 				return false;
 			}
@@ -74,7 +75,7 @@ export default class Piece {
 
 	moveDown(array) {
 		if (this.checkValidDown()) { //if it can move down, move all 4 component squares down
-			for (let i = 0; i < 4; i++) {
+			for (let i = 0; i < NUM_PIECE_SQS; i++) {
 				this.sqArray[i][1]++;
 			}
 		}
@@ -89,28 +90,28 @@ export default class Piece {
 	moveLeft() {
 		//if it can move left, move all 4 component squares left
 		if (this.checkValidLeft()) {
-			for (let i = 0; i < 4; i++) {
+			for (let i = 0; i < NUM_PIECE_SQS; i++) {
 				this.sqArray[i][0]--;
 			}
 		}
-		this.game.draw();
+		window.requestAnimationFrame(this.game.draw.bind(this.game));
 	};
 
 	moveRight() {
 		//if it can move down, move all 4 component squares right
 		if (this.checkValidRight()) {
-			for (let i = 0; i < 4; i++) {
+			for (let i = 0; i < NUM_PIECE_SQS; i++) {
 				this.sqArray[i][0]++;
 			}
 		}
-		this.game.draw();
+		window.requestAnimationFrame(this.game.draw.bind(this.game));
 	};
 
 	drop() {
 		while (this.checkValidDown()){
 			this.moveDown();
 		}
-		this.game.draw();
+		window.requestAnimationFrame(this.game.draw.bind(this.game));
 	}
 
 	rotate() {
@@ -136,19 +137,19 @@ export default class Piece {
 			this.sqArray[3][0] = this.sqArray[2][0] - this.sqArray[2][1] + oldy3;
 			this.sqArray[3][1] = this.sqArray[2][0] + this.sqArray[2][1] - oldx3;
 		}
-		this.game.draw();
+		window.requestAnimationFrame(this.game.draw.bind(this.game));
 	};
 
 	setLocation(x, y) {
-		for (let i = 0; i < 4; i++) {
+		for (let i = 0; i < NUM_PIECE_SQS; i++) {
 			this.sqArray[i][0] = this.layoutArray[i][0] + x;
 			this.sqArray[i][1] = this.layoutArray[i][1] + y;
 		}
-		this.game.draw();
+		window.requestAnimationFrame(this.game.draw.bind(this.game));
 	};
 
 	stick() {
-		for (let i = 0; i < 4; i++) {
+		for (let i = 0; i < NUM_PIECE_SQS; i++) {
 			this.game.board[this.sqArray[i][0]][this.sqArray[i][1]] = new StuckSquare(this.color);
 			this.game.board[this.sqArray[i][0]][this.sqArray[i][1]].setLocation(this.sqArray[i][0], this.sqArray[i][1]);
 		}

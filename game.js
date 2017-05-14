@@ -195,7 +195,7 @@ export default class Game {
 
 	//DRAWING updates
 	draw() {
-		if (this.go){
+		if (this.go) {
 			//game panel
 			this.ctx.fillStyle = BLACK;
 			this.ctx.fillRect(0, 0, this.panelWidth, this.gamePanelHeight);
@@ -203,12 +203,10 @@ export default class Game {
 			this.drawBoard();
 
 			this.currPiece.draw();
-		}
-
-		else {
+		} else {
 			// game is paused
 			if(!this.lost && !this.fresh){
-	 			this.ctx.fillStyle= this.dialog.color;
+	 			this.ctx.fillStyle = this.dialog.color;
 				this.ctx.fillRect(this.dialog.x, this.dialog.y, this.dialog.width, this.dialog.height);
 				this.ctx.fillStyle = BLACK;
 				this.ctx.font = `${MEDIUM_FONT_SIZE} ${FONT_FAMILY}`;
@@ -264,9 +262,9 @@ export default class Game {
 	checkLines() {
 		let board = this.board;
 		let numCleared = 0;
-		for (let j = 1; j < this.rows-1; j++) {
+		for (let j = 1; j < this.rows - 1; j++) {
 			let numFull = 0;
-			for (let i = 1; i < this.cols-1; i++) {
+			for (let i = 1; i < this.cols - 1; i++) {
 				if (!board[i][j]) {
 					break;
 				} else {
@@ -280,7 +278,7 @@ export default class Game {
 					for (let q = 1; q < this.cols - 1; q++) {
 						board[q][p] = board[q][p - 1]
 						if (board[q][p]){
-						 	board[q][p].setLocation(q,p);
+						 	board[q][p].setLocation(q, p);
 						 	this.draw();
 						}
 					}
