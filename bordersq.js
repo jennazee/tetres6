@@ -2,19 +2,19 @@ import {SQWIDTH, CHARCOAL_GRAY} from './constants.js';
 import Piece from './piece.js';
 
 export default class BorderSq {
-	constructor() {
-		this.width = SQWIDTH;
-	 	this.color = CHARCOAL_GRAY;
-	 	this.sqArray = [];
-	 	this.ctx = document.querySelector('#mainCanvas').getContext('2d');
-	};
+  constructor() {
+    this.width = SQWIDTH;
+    this.color = CHARCOAL_GRAY;
+    this.sqArray = [];
+    this.ctx = document.querySelector('#mainCanvas').getContext('2d');
+  };
 
-	draw() {
-		this.ctx.fillStyle = this.color;
-		this.ctx.fillRect(this.sqArray[0] * this.width, this.sqArray[1] * this.width, this.width, this.width);
-	};
+  draw() {
+    this.ctx.fillStyle = this.color;
+    this.ctx.fillRect(this.sqArray[0] * this.width, this.sqArray[1] * this.width, this.width, this.width);
+  };
 
-	setLocation(x, y) {
-		this.sqArray = [x, y];
-	};
+  setLocation(x, y) {
+    this.sqArray = [x, y];
+  };
 };
