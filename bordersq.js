@@ -1,10 +1,13 @@
-class BorderSq {
+import {SQWIDTH, CHARCOAL_GRAY} from './constants.js';
+import Piece from './piece.js';
+
+export default class BorderSq {
 	constructor() {
 		this.width = SQWIDTH;
 	 	this.color = CHARCOAL_GRAY;
 	 	this.sqArray = [];
 	 	this.ctx = document.querySelector('#mainCanvas').getContext('2d');
-	}
+	};
 
 	draw() {
 		this.ctx.fillStyle = this.color;
@@ -13,5 +16,5 @@ class BorderSq {
 
 	setLocation(x, y) {
 		this.sqArray = [x, y];
-	}
-}
+	};
+};

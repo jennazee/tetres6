@@ -1,4 +1,7 @@
-class LPiece extends Piece {
+import MAGENTA from './constants.js';
+import Piece from './piece.js';
+
+export default class LPiece extends Piece {
 	constructor(game) {
 		super(game);
 		this.color = MAGENTA;

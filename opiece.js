@@ -1,7 +1,10 @@
-class OPiece extends Piece {
+import PURPLE from './constants.js';
+import Piece from './piece.js';
+
+export default class OPiece extends Piece {
 	constructor(game) {
 		super(game);
-	 	this.color = '#b650ff';
+	 	this.color = PURPLE;
 
 		this.sqArray[0][0] = 0;
 		this.sqArray[0][1] = 0;
@@ -17,4 +20,4 @@ class OPiece extends Piece {
 
 		this.cloneSqArrayToLayoutArray();
 	}
-}
+};

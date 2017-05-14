@@ -1,4 +1,7 @@
-class ZPiece extends Piece {
+import ORANGE from './constants.js';
+import Piece from './piece.js';
+
+export default class ZPiece extends Piece {
 	constructor(game) {
 		super(game);
 		this.color = ORANGE;

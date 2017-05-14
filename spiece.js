@@ -1,4 +1,7 @@
-class SPiece extends Piece {
+import LIME from './constants.js';
+import Piece from './piece.js';
+
+export default class SPiece extends Piece {
 	constructor(game) {
 		super(game);
 		this.color = LIME;

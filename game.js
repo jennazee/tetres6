@@ -1,5 +1,39 @@
-//TETRIS
-class Game {
+import IPiece from './ipiece.js';
+import JPiece from './jpiece.js';
+import LPiece from './lpiece.js';
+import OPiece from './opiece.js';
+import SPiece from './spiece.js';
+import TPiece from './tpiece.js';
+import ZPiece from './zpiece.js';
+import BorderSq from './bordersq.js';
+
+import Dialog from './dialog.js';
+
+import {INITIAL_SPEED,
+				SQWIDTH,
+				SCORE_PANEL_HEIGHT,
+				NEW_PIECE_X,
+				NEW_PIECE_Y,
+				CHARCOAL_GRAY,
+				LARGE_FONT_SIZE,
+				MEDIUM_FONT_SIZE,
+				SMALL_FONT_SIZE,
+				FONT_FAMILY,
+				JKEY,
+				KKEY,
+				LKEY,
+				PKEY,
+				COMMAKEY,
+				SPACEBAR,
+				BLACK,
+				NORMAL_CLEAR_PTS,
+				TETRIS_CLEAR_PTS,
+				DOUBLE_TETRIS_CLEAR_PTS,
+				TOP_SPEED,
+				RED,
+				TEAL} from './constants.js';
+
+export default class Game {
 	constructor() {
 		this.scoreCounter = 0;
 		this.dialog = new Dialog();
@@ -60,9 +94,9 @@ class Game {
 		this.ctx.fillStyle = this.dialog.color;
 		this.ctx.fillRect(this.dialog.x, this.dialog.y, this.dialog.width, this.dialog.height);
 		this.ctx.fillStyle = BLACK;
-		this.ctx.font = `${MEDIUM_FONT_SIZE} ${FONT}`;
+		this.ctx.font = `${MEDIUM_FONT_SIZE} ${FONT_FAMILY}`;
 		this.ctx.fillText('Click to Make it Rain Pieces!', this.dialog.x + 10, this.dialog.y + 40, 280);
-		this.ctx.font = `${SMALL_FONT_SIZE} ${FONT}`;
+		this.ctx.font = `${SMALL_FONT_SIZE} ${FONT_FAMILY}`;
 		this.ctx.fillText('Left = J-Key, Right = L-key', this.dialog.x + 35, this.dialog.y + 70, 230);
 		this.ctx.fillText('Rotate = K-key, Down = Comma-key', this.dialog.x + 35, this.dialog.y + 90, 230);
 		this.ctx.fillText('Drop = Space', this.dialog.x + 35, this.dialog.y + 110, 230);
@@ -75,7 +109,7 @@ class Game {
 	}
 
 	drawBoard() {
-		let board = this.board;
+		const board = this.board;
 		for (let r = 0; r < this.rows; r++) {
 			for (let c = 0; c < this.cols; c++) {
 				if (board[c][r]){
@@ -87,7 +121,7 @@ class Game {
 		//score panel
 		this.ctx.fillStyle = CHARCOAL_GRAY;
 		this.ctx.fillRect(0, this.gamePanelHeight, this.panelWidth, SCORE_PANEL_HEIGHT);
-		this.ctx.font = `${LARGE_FONT_SIZE} ${FONT}`;
+		this.ctx.font = `${LARGE_FONT_SIZE} ${FONT_FAMILY}`;
 		this.ctx.fillStyle = RED;
 		this.ctx.fillText('Score: '+ this.scoreCounter, 20, this.gamePanelHeight+40, this.panelWidth-20);
 		this.ctx.fillStyle = TEAL;
@@ -97,7 +131,7 @@ class Game {
 		document.addEventListener('keydown', (e) => {
 			//if game is in play, J-key moves falling piece left
 			if (e.keyCode === JKEY) {
-				if (this.game.go){
+				if (this.go){
 					e.preventDefault();
 					this.currPiece.moveLeft()
 				}
@@ -105,7 +139,7 @@ class Game {
 
 			//if game is in play, L-key moves piece right
 			if (e.keyCode === LKEY) {
-				if (this.game.go){
+				if (this.go){
 					e.preventDefault();
 					this.currPiece.moveRight()
 				}
@@ -113,7 +147,7 @@ class Game {
 
 			//if game is in play, K-key rotates the piece
 			if (e.keyCode === KKEY) {
-				if (this.game.go) {
+				if (this.go) {
 					e.preventDefault();
 					this.currPiece.rotate();
 				}
@@ -121,7 +155,7 @@ class Game {
 
 			//if game is in play, comma-key moves piece down a row
 			if (e.keyCode === COMMAKEY) {
-				if (this.game.go){
+				if (this.go){
 					e.preventDefault();
 					this.currPiece.moveDown()
 				}
@@ -129,7 +163,7 @@ class Game {
 
 			//if game is in play, space bar drops the piece
 			if (e.keyCode === SPACEBAR) {
-				if (this.game.go) {
+				if (this.go) {
 					e.preventDefault();
 					this.currPiece.drop();
 				}
@@ -178,7 +212,7 @@ class Game {
 	 			this.ctx.fillStyle= this.dialog.color;
 				this.ctx.fillRect(this.dialog.x, this.dialog.y, this.dialog.width, this.dialog.height);
 				this.ctx.fillStyle = BLACK;
-				this.ctx.font = `${MEDIUM_FONT_SIZE} ${FONT}`;
+				this.ctx.font = `${MEDIUM_FONT_SIZE} ${FONT_FAMILY}`;
 				this.ctx.fillText('Game Paused.', this.dialog.x + 65, this.dialog.y+80, 280);
 			}
 			// game is over
@@ -186,9 +220,9 @@ class Game {
 				this.ctx.fillStyle= this.dialog.color;
 				this.ctx.fillRect(this.dialog.x, this.dialog.y, this.dialog.width, this.dialog.height);
 				this.ctx.fillStyle = BLACK;
-				this.ctx.font = `${MEDIUM_FONT_SIZE} ${FONT}`;
+				this.ctx.font = `${MEDIUM_FONT_SIZE} ${FONT_FAMILY}`;
 				this.ctx.fillText('Sorry! Game Over :(', this.dialog.x + 30, this.dialog.y + 70, 280);
-				this.ctx.font = `${SMALL_FONT_SIZE} ${FONT}`;
+				this.ctx.font = `${SMALL_FONT_SIZE} ${FONT_FAMILY}`;
 				this.ctx.fillText('Click to start a new game.', this.dialog.x + 55, this.dialog.y + 95, 230);
 				return;
 			}
@@ -231,20 +265,20 @@ class Game {
 	checkLines() {
 		let board = this.board;
 		let numCleared = 0;
-		for (let j = 1; j < rows-1; j++) {
+		for (let j = 1; j < this.rows-1; j++) {
 			let numFull = 0;
-			for (let i = 1; i < cols-1; i++) {
+			for (let i = 1; i < this.cols-1; i++) {
 				if (!board[i][j]) {
 					break;
 				} else {
 					numFull++;
 				}
 			}
-			if (numFull === cols - 2) {
+			if (numFull === this.cols - 2) {
 				numCleared++;
 				for (let p = j; p > 2; p--) {
 					//cols
-					for (let q = 1; q < cols - 1; q++) {
+					for (let q = 1; q < this.cols - 1; q++) {
 						board[q][p] = board[q][p - 1]
 						if (board[q][p]){
 						 	board[q][p].setLocation(q,p);
@@ -281,4 +315,4 @@ class Game {
 			}
 		}
 	}
-}
+};

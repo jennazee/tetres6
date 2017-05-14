@@ -1,7 +1,10 @@
-class JPiece extends Piece {
+import GOLD from './constants.js';
+import Piece from './piece.js';
+
+export default class JPiece extends Piece {
 	constructor(game) {
 		super(game);
-		this.color = 'gold';
+		this.color = GOLD;
 
 		this.sqArray[0][0] = 0;
 		this.sqArray[0][1] = 0;

@@ -1,6 +1,9 @@
-class Piece {
+import {SQWIDTH, CHARCOAL_GRAY, BLACK} from './constants.js';
+import StuckSquare from './stuckSquare.js';
+
+export default class Piece {
 	constructor(game) {
-		this.width = SQ_WIDTH;
+		this.width = SQWIDTH;
 		this.game = game;
 
 		this.sqArray = [[], [], [], []];
@@ -28,7 +31,7 @@ class Piece {
 	//smart pieces!!
 	checkValidDown() {
 		for (let i = 0; i < 4; i++) {
-			if (!!board[this.sqArray[i][0]][this.sqArray[i][1] + 1]) {
+			if (!!this.game.board[this.sqArray[i][0]][this.sqArray[i][1] + 1]) {
 				return false;
 			}
 		}
@@ -37,7 +40,7 @@ class Piece {
 
 	checkValidLeft() {
 		for (let i = 0; i < 4; i++) {
-			if (!!board[this.sqArray[i][0] - 1][this.sqArray[i][1]]) {
+			if (!!this.game.board[this.sqArray[i][0] - 1][this.sqArray[i][1]]) {
 				return false;
 			}
 		}
@@ -46,7 +49,7 @@ class Piece {
 
 	checkValidRight() {
 		for (let i = 0; i < 4; i++) {
-			if (board[this.sqArray[i][0] + 1][this.sqArray[i][1]]) {
+			if (this.game.board[this.sqArray[i][0] + 1][this.sqArray[i][1]]) {
 				return false;
 			}
 		}
@@ -54,15 +57,15 @@ class Piece {
 	}
 
 	checkValidRotate() {
-		if (board[this.sqArray[2][0]-this.sqArray[2][1] + this.sqArray[0][1]][this.sqArray[2][0]+this.sqArray[2][1] - this.sqArray[0][0]]) {
+		if (this.game.board[this.sqArray[2][0]-this.sqArray[2][1] + this.sqArray[0][1]][this.sqArray[2][0]+this.sqArray[2][1] - this.sqArray[0][0]]) {
 			return false;
 		}
 
-		if (board[this.sqArray[2][0]-this.sqArray[2][1] + this.sqArray[1][1]][this.sqArray[2][0]+this.sqArray[2][1] - this.sqArray[1][0]]) {
+		if (this.game.board[this.sqArray[2][0]-this.sqArray[2][1] + this.sqArray[1][1]][this.sqArray[2][0]+this.sqArray[2][1] - this.sqArray[1][0]]) {
 			return false;
 		}
 
-		if (board[this.sqArray[2][0]-this.sqArray[2][1] + this.sqArray[3][1]][this.sqArray[2][0]+this.sqArray[2][1] - this.sqArray[3][0]]) {
+		if (this.game.board[this.sqArray[2][0]-this.sqArray[2][1] + this.sqArray[3][1]][this.sqArray[2][0]+this.sqArray[2][1] - this.sqArray[3][0]]) {
 			return false;
 		}
 		return true;
@@ -145,8 +148,8 @@ class Piece {
 
 	stick() {
 		for (let i = 0; i < 4; i++) {
-			board[this.sqArray[i][0]][this.sqArray[i][1]] = new StuckSquare(this.color);
-			board[this.sqArray[i][0]][this.sqArray[i][1]].setLocation(this.sqArray[i][0], this.sqArray[i][1]);
+			this.game.board[this.sqArray[i][0]][this.sqArray[i][1]] = new StuckSquare(this.color);
+			this.game.board[this.sqArray[i][0]][this.sqArray[i][1]].setLocation(this.sqArray[i][0], this.sqArray[i][1]);
 		}
 		this.game.makeNewPiece();
 	}
