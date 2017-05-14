@@ -1,9 +1,9 @@
 class Dialog {
   constructor() {
-    this.width = 300;
-    this.height = 150;
-    this.x = 50;
-    this.y = 175;
-    this.color = '#FF3333';
+    this.width = DIALOG_WIDTH;
+    this.height = DIALOG_HEIGHT;
+    this.x = DIALOG_X;
+    this.y = DIALOG_Y;
+    this.color = RED;
   }
 };

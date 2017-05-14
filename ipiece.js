@@ -1,7 +1,7 @@
 class IPiece extends Piece {
 	constructor(game) {
 		super(game);
-		this.color = '#f33';
+		this.color = RED;
 
 		this.sqArray[0][0] = 0;
 		this.sqArray[0][1] = 0;

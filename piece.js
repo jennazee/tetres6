@@ -1,12 +1,13 @@
 class Piece {
 	constructor(game) {
-		this.width = 20;
+		this.width = SQ_WIDTH;
 		this.game = game;
 
 		this.sqArray = [[], [], [], []];
 		this.layoutArray = [];
 
-		this.color = '#333';
+		this.color = CHARCOAL_GRAY;
+		this.ctx = document.querySelector('#mainCanvas').getContext('2d');
 	};
 
 	cloneSqArrayToLayoutArray() {
@@ -14,8 +15,7 @@ class Piece {
 	};
 
 	draw() {
-		this.ctx = document.querySelector('#mainCanvas').getContext('2d');
-		this.ctx.strokeStyle = '#191919';
+		this.ctx.strokeStyle = BLACK;
 		this.ctx.lineWidth = 2;
 		this.ctx.fillStyle = this.color;
 
@@ -23,14 +23,13 @@ class Piece {
 			this.ctx.fillRect(this.sqArray[i][0] * this.width, this.sqArray[i][1] * this.width, this.width, this.width);
 			this.ctx.strokeRect(this.sqArray[i][0] * this.width, this.sqArray[i][1] * this.width, this.width, this.width);
 		}
-	};
-
+	}
 
 	//smart pieces!!
 	checkValidDown() {
 		for (let i = 0; i < 4; i++) {
 			if (!!board[this.sqArray[i][0]][this.sqArray[i][1] + 1]) {
-				return;
+				return false;
 			}
 		}
 		return true;
@@ -39,7 +38,7 @@ class Piece {
 	checkValidLeft() {
 		for (let i = 0; i < 4; i++) {
 			if (!!board[this.sqArray[i][0] - 1][this.sqArray[i][1]]) {
-				return;
+				return false;
 			}
 		}
 		return true;
@@ -48,7 +47,7 @@ class Piece {
 	checkValidRight() {
 		for (let i = 0; i < 4; i++) {
 			if (board[this.sqArray[i][0] + 1][this.sqArray[i][1]]) {
-				return;
+				return false;
 			}
 		}
 		return true;
@@ -56,15 +55,15 @@ class Piece {
 
 	checkValidRotate() {
 		if (board[this.sqArray[2][0]-this.sqArray[2][1] + this.sqArray[0][1]][this.sqArray[2][0]+this.sqArray[2][1] - this.sqArray[0][0]]) {
-			return;
+			return false;
 		}
 
 		if (board[this.sqArray[2][0]-this.sqArray[2][1] + this.sqArray[1][1]][this.sqArray[2][0]+this.sqArray[2][1] - this.sqArray[1][0]]) {
-			return;
+			return false;
 		}
 
 		if (board[this.sqArray[2][0]-this.sqArray[2][1] + this.sqArray[3][1]][this.sqArray[2][0]+this.sqArray[2][1] - this.sqArray[3][0]]) {
-			return;
+			return false;
 		}
 		return true;
 	}
@@ -114,24 +113,24 @@ class Piece {
 		//newx = centerOfRotationX - centerOfRotationY + oldYLocation
 		//newy = centerOfRotationY + centerOfRotationX - oldXLocation
 		if (this.checkValidRotate()){
-			var oldx0 = this.sqArray[0][0];
-			var oldy0 = this.sqArray[0][1];
+			const oldx0 = this.sqArray[0][0];
+			const oldy0 = this.sqArray[0][1];
 
-			var oldx1 = this.sqArray[1][0];
-			var oldy1 = this.sqArray[1][1];
+			const oldx1 = this.sqArray[1][0];
+			const oldy1 = this.sqArray[1][1];
 
-			var oldx3 = this.sqArray[3][0];
-			var oldy3 = this.sqArray[3][1];
+			const oldx3 = this.sqArray[3][0];
+			const oldy3 = this.sqArray[3][1];
 
 
-			this.sqArray[0][0] = this.sqArray[2][0]-this.sqArray[2][1] + oldy0;
-			this.sqArray[0][1] = this.sqArray[2][0]+this.sqArray[2][1] - oldx0;
+			this.sqArray[0][0] = this.sqArray[2][0] - this.sqArray[2][1] + oldy0;
+			this.sqArray[0][1] = this.sqArray[2][0] + this.sqArray[2][1] - oldx0;
 
-			this.sqArray[1][0] = this.sqArray[2][0]-this.sqArray[2][1] + oldy1;
-			this.sqArray[1][1] = this.sqArray[2][0]+this.sqArray[2][1] - oldx1;
+			this.sqArray[1][0] = this.sqArray[2][0] - this.sqArray[2][1] + oldy1;
+			this.sqArray[1][1] = this.sqArray[2][0] + this.sqArray[2][1] - oldx1;
 
-			this.sqArray[3][0] = this.sqArray[2][0]-this.sqArray[2][1] + oldy3;
-			this.sqArray[3][1] = this.sqArray[2][0]+this.sqArray[2][1] - oldx3;
+			this.sqArray[3][0] = this.sqArray[2][0] - this.sqArray[2][1] + oldy3;
+			this.sqArray[3][1] = this.sqArray[2][0] + this.sqArray[2][1] - oldx3;
 		}
 		this.game.draw();
 	};

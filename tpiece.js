@@ -16,5 +16,5 @@ class TPiece extends Piece {
 		this.sqArray[3][1] = 1;
 
 		this.cloneSqArrayToLayoutArray();
- 	}
+ 	};
 }

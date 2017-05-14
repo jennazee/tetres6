@@ -1,15 +1,4 @@
 //TETRIS
-var board = [];
-
-const SQWIDTH = 20;
-const SCORE_PANEL_HEIGHT = 60;
-const JKEY = 74;
-const KKEY = 75
-const LKEY = 76;
-const PKEY = 80;
-const COMMAKEY = 188;
-const SPACEBAR = 32;
-
 class Game {
 	constructor() {
 		this.scoreCounter = 0;
@@ -18,73 +7,75 @@ class Game {
 		this.lost = false;
 		this.fresh = true;
 		this.tetris = false;
-		this.speediness = 1000; // changes with game play
+		this.board = [];
+		this.speediness = INITIAL_SPEED; // changes with game play
 	}
 
 	init() {
-		var canvas = document.querySelector('#mainCanvas');
+		const canvas = document.querySelector('#mainCanvas');
+		let board = this.board;
 
-	  if (canvas.getContext) {
-			this.ctx = canvas.getContext('2d');
+	  if (!canvas.getContext) {
+	  	return false;
+	  }
+		this.ctx = canvas.getContext('2d');
 
-			// keeping everything contingent on that which cannot be set here (canvas dimensions)
-			this.panelWidth = canvas.width;
-			this.gamePanelHeight = canvas.height - SCORE_PANEL_HEIGHT;
-			this.rows = this.gamePanelHeight/SQWIDTH + 1;
-			this.cols = this.panelWidth/SQWIDTH;
+		// keeping everything contingent on that which cannot be set here (canvas dimensions)
+		this.panelWidth = canvas.width;
+		this.gamePanelHeight = canvas.height - SCORE_PANEL_HEIGHT;
+		this.rows = this.gamePanelHeight/SQWIDTH + 1;
+		this.cols = this.panelWidth/SQWIDTH;
 
-			//game panel
-			this.ctx.fillStyle = '#191919';
-			this.ctx.fillRect(0, 0, this.panelWidth, this.gamePanelHeight);
+		//game panel
+		this.ctx.fillStyle = BLACK;
+		this.ctx.fillRect(0, 0, this.panelWidth, this.gamePanelHeight);
 
 
-			//make the pieces array. It's empty until pieces start sticking
-			for (let j = 0; j < this.rows; j++) {
-				board[j] = [];
-			}
-
-			for (let y = 0; y < this.rows; y++) {
-				board[0][y] = new BorderSq();
-				board[0][y].setLocation(0,y);
-
-				board[this.cols - 1][y] = new BorderSq();
-				board[this.cols - 1][y].setLocation(this.cols - 1, y);
-			}
-
-			for (let x = 0; x < this.cols; x++){
-				board[x][0] = new BorderSq();
-				board[x][this.rows - 1] = new BorderSq();
-				board[x][0].setLocation(x, 0);
-				board[x][this.rows - 1].setLocation(x, this.rows - 1);
-			}
-
-			this.currPiece = this.pieceFactory(this);
-			this.currPiece.setLocation(9,1);
-
-			this.drawBoard();
-
-			//welcome dialog
-			this.ctx.fillStyle = this.dialog.color;
-			this.ctx.fillRect(this.dialog.x, this.dialog.y, this.dialog.width, this.dialog.height);
-			this.ctx.fillStyle = 'Black';
-			this.ctx.font = '22px Century Gothic, Calibri';
-			this.ctx.fillText('Click to Make it Rain Pieces!', this.dialog.x + 10, this.dialog.y+40, 280);
-			this.ctx.font = '14px Century Gothic, Calibri';
-			this.ctx.fillText('Left = J-Key, Right = L-key', this.dialog.x + 35, this.dialog.y+70, 230);
-			this.ctx.fillText('Rotate = K-key, Down = Comma-key', this.dialog.x + 35, this.dialog.y+90, 230);
-			this.ctx.fillText('Drop = Space', this.dialog.x + 35, this.dialog.y+110, 230);
-			this.ctx.fillText('Pause = P-key', this.dialog.x + 35, this.dialog.y+130, 230);
-
-			this.setupKeyListeners();
-			this.setupClickListeners();
-
-			return true;
+		//make the pieces array. It's empty until pieces start sticking
+		for (let j = 0; j < this.rows; j++) {
+			board[j] = [];
 		}
 
-		return false;
+		for (let y = 0; y < this.rows; y++) {
+			board[0][y] = new BorderSq();
+			board[0][y].setLocation(0,y);
+
+			board[this.cols - 1][y] = new BorderSq();
+			board[this.cols - 1][y].setLocation(this.cols - 1, y);
+		}
+
+		for (let x = 0; x < this.cols; x++) {
+			board[x][0] = new BorderSq();
+			board[x][this.rows - 1] = new BorderSq();
+			board[x][0].setLocation(x, 0);
+			board[x][this.rows - 1].setLocation(x, this.rows - 1);
+		}
+
+		this.currPiece = this.pieceFactory(this);
+		this.currPiece.setLocation(NEW_PIECE_X, NEW_PIECE_Y);
+
+		this.drawBoard();
+
+		//welcome dialog
+		this.ctx.fillStyle = this.dialog.color;
+		this.ctx.fillRect(this.dialog.x, this.dialog.y, this.dialog.width, this.dialog.height);
+		this.ctx.fillStyle = BLACK;
+		this.ctx.font = `${MEDIUM_FONT_SIZE} ${FONT}`;
+		this.ctx.fillText('Click to Make it Rain Pieces!', this.dialog.x + 10, this.dialog.y + 40, 280);
+		this.ctx.font = `${SMALL_FONT_SIZE} ${FONT}`;
+		this.ctx.fillText('Left = J-Key, Right = L-key', this.dialog.x + 35, this.dialog.y + 70, 230);
+		this.ctx.fillText('Rotate = K-key, Down = Comma-key', this.dialog.x + 35, this.dialog.y + 90, 230);
+		this.ctx.fillText('Drop = Space', this.dialog.x + 35, this.dialog.y + 110, 230);
+		this.ctx.fillText('Pause = P-key', this.dialog.x + 35, this.dialog.y + 130, 230);
+
+		this.setupKeyListeners();
+		this.setupClickListeners();
+
+		return true;
 	}
 
 	drawBoard() {
+		let board = this.board;
 		for (let r = 0; r < this.rows; r++) {
 			for (let c = 0; c < this.cols; c++) {
 				if (board[c][r]){
@@ -94,12 +85,12 @@ class Game {
 		}
 
 		//score panel
-		this.ctx.fillStyle = '#333333';
+		this.ctx.fillStyle = CHARCOAL_GRAY;
 		this.ctx.fillRect(0, this.gamePanelHeight, this.panelWidth, SCORE_PANEL_HEIGHT);
-		this.ctx.font = '30px Century Gothic'
-		this.ctx.fillStyle = '#FF3333';
+		this.ctx.font = `${LARGE_FONT_SIZE} ${FONT}`;
+		this.ctx.fillStyle = RED;
 		this.ctx.fillText('Score: '+ this.scoreCounter, 20, this.gamePanelHeight+40, this.panelWidth-20);
-		this.ctx.fillStyle = '00CCCC';
+		this.ctx.fillStyle = TEAL;
 	}
 
 	setupKeyListeners() {
@@ -122,7 +113,7 @@ class Game {
 
 			//if game is in play, K-key rotates the piece
 			if (e.keyCode === KKEY) {
-				if (this.game.go){
+				if (this.game.go) {
 					e.preventDefault();
 					this.currPiece.rotate();
 				}
@@ -153,18 +144,18 @@ class Game {
 
 	setupClickListeners() {
 		mainCanvas.addEventListener('click', (e) => {
-			if (this.game.fresh) {
+			if (this.fresh) {
 				this.fresh = false;
 			}
-			if (!this.game.go){
+			if (!this.go){
 				this.go = true;
 			}
 			if (this.lost) {
 				clearInterval(this.game_loop);
 				this.game_loop = start();
-				this.game.lost = false
-				this.game.go = false;
-				this.game.fresh = true;
+				this.lost = false
+				this.go = false;
+				this.fresh = true;
 			}
 		});
 	}
@@ -173,7 +164,7 @@ class Game {
 	draw() {
 		if (this.go){
 			//game panel
-			this.ctx.fillStyle = '#191919';
+			this.ctx.fillStyle = BLACK;
 			this.ctx.fillRect(0, 0, this.panelWidth, this.gamePanelHeight);
 
 			this.drawBoard();
@@ -186,19 +177,19 @@ class Game {
 			if(!this.lost && !this.fresh){
 	 			this.ctx.fillStyle= this.dialog.color;
 				this.ctx.fillRect(this.dialog.x, this.dialog.y, this.dialog.width, this.dialog.height);
-				this.ctx.fillStyle = 'Black';
-				this.ctx.font = '22px Century Gothic, Calibri';
+				this.ctx.fillStyle = BLACK;
+				this.ctx.font = `${MEDIUM_FONT_SIZE} ${FONT}`;
 				this.ctx.fillText('Game Paused.', this.dialog.x + 65, this.dialog.y+80, 280);
 			}
 			// game is over
 			else if (this.lost && !this.fresh) {
 				this.ctx.fillStyle= this.dialog.color;
 				this.ctx.fillRect(this.dialog.x, this.dialog.y, this.dialog.width, this.dialog.height);
-				this.ctx.fillStyle = 'Black';
-				this.ctx.font = '22px Century Gothic, Calibri';
-				this.ctx.fillText('Sorry! Game Over :(', this.dialog.x + 30, this.dialog.y+70, 280);
-				this.ctx.font = '14px Century Gothic, Calibri';
-				this.ctx.fillText('Click to start a new game.', this.dialog.x + 55, this.dialog.y+95, 230);
+				this.ctx.fillStyle = BLACK;
+				this.ctx.font = `${MEDIUM_FONT_SIZE} ${FONT}`;
+				this.ctx.fillText('Sorry! Game Over :(', this.dialog.x + 30, this.dialog.y + 70, 280);
+				this.ctx.font = `${SMALL_FONT_SIZE} ${FONT}`;
+				this.ctx.fillText('Click to start a new game.', this.dialog.x + 55, this.dialog.y + 95, 230);
 				return;
 			}
 		}
@@ -233,46 +224,46 @@ class Game {
 	makeNewPiece() {
 		this.currPiece = this.pieceFactory(this);
 		if (!this.lost) {
-			this.currPiece.setLocation(9,1);
+			this.currPiece.setLocation(NEW_PIECE_X, NEW_PIECE_Y);
 		}
 	}
 
 	checkLines() {
-		var numCleared = 0;
+		let board = this.board;
+		let numCleared = 0;
 		for (let j = 1; j < rows-1; j++) {
-			var numFull = 0;
-			for (let i = 1; i < cols-1; i++){
-				if (!board[i][j]){
+			let numFull = 0;
+			for (let i = 1; i < cols-1; i++) {
+				if (!board[i][j]) {
 					break;
-				}
-				else {
+				} else {
 					numFull++;
 				}
 			}
-			if (numFull === cols - 2){
+			if (numFull === cols - 2) {
 				numCleared++;
-				for (let p = j; p > 2; p--){
+				for (let p = j; p > 2; p--) {
 					//cols
-					for (let q = 1; q < cols - 1; q++){
-						board[q][p] = board[q][p-1]
+					for (let q = 1; q < cols - 1; q++) {
+						board[q][p] = board[q][p - 1]
 						if (board[q][p]){
 						 	board[q][p].setLocation(q,p);
 						 	this.draw();
 						}
 					}
 				}
-				if (this.speediness > 100) {
-					this.speediness = this.speediness - 50;
+				if (this.speediness > TOP_SPEED) {
+					this.speediness = this.speediness - SPEED_UP_AMT;
 				}
-				this.scoreCounter = this.scoreCounter + 10;
+				this.scoreCounter = this.scoreCounter + NORMAL_CLEAR_PTS;
 				//one tetris
-				if (numCleared === 4 && !tetris) {
-					this.scoreCounter = this.scoreCounter + 100;
+				if (numCleared === 4 && !this.tetris) {
+					this.scoreCounter = this.scoreCounter + TETRIS_CLEAR_PTS;
 					this.tetris = true;
 				}
 				//back to back tetrises!!!
-				else if (numCleared === 4 && tetris) {
-					this.scoreCounter = this.scoreCounter + 500;
+				else if (numCleared === 4 && this.tetris) {
+					this.scoreCounter = this.scoreCounter + DOUBLE_TETRIS_CLEAR_PTS;
 				}
 				else {
 					this.tetris = false;
@@ -282,8 +273,8 @@ class Game {
 	}
 
 	checkLoss() {
-		for (let s = 0; s < 4; s++){
-			if (board[this.currPiece.sqArray[s][0]][this.currPiece.sqArray[s][1]]){
+		for (let s = 0; s < 4; s++) {
+			if (this.board[this.currPiece.sqArray[s][0]][this.currPiece.sqArray[s][1]]){
 				this.go = false;
 				this.lost = true;
 				this.draw()

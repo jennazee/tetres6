@@ -1,6 +1,6 @@
 class StuckSquare {
 	constructor(color) {
-		this.width = 20;
+		this.width = SQWIDTH;
 	 	this.color = color;
 	 	this.sqArray;
 	}

@@ -12,7 +12,7 @@ class App {
 	  	this.game.draw();
 	  	setTimeout(play, this.game.speediness);
 	   	if (this.game.go) {
-	   		currPiece.moveDown();
+	   		this.game.currPiece.moveDown();
 	   	}
 	  };
 

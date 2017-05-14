@@ -1,7 +1,7 @@
 class ZPiece extends Piece {
 	constructor(game) {
 		super(game);
-		this.color = '#f80';
+		this.color = ORANGE;
 
 		this.sqArray[0][0] = 0;
 		this.sqArray[0][1] = 0;
