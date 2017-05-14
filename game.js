@@ -11,6 +11,7 @@ import Dialog from './dialog.js';
 
 import {INITIAL_SPEED,
 				SQWIDTH,
+				NUM_PIECE_SQS,
 				SCORE_PANEL_HEIGHT,
 				NEW_PIECE_X,
 				NEW_PIECE_Y,
@@ -27,6 +28,7 @@ import {INITIAL_SPEED,
 				SPACEBAR,
 				BLACK,
 				NORMAL_CLEAR_PTS,
+				NUM_FOR_TETRIS,
 				TETRIS_CLEAR_PTS,
 				DOUBLE_TETRIS_CLEAR_PTS,
 				TOP_SPEED,
@@ -38,8 +40,8 @@ export default class Game {
 		this.scoreCounter = 0;
 		this.dialog = new Dialog();
 		this.go = false;
-		this.lost = false;
-		this.fresh = true;
+		this.isLostGame = false;
+		this.isFreshGame = true;
 		this.tetris = false;
 		this.board = [];
 		this.speediness = INITIAL_SPEED; // changes with game play
@@ -89,8 +91,14 @@ export default class Game {
 		this.currPiece.setLocation(NEW_PIECE_X, NEW_PIECE_Y);
 
 		this.drawBoard();
+		this.drawWelcomeDialog();
+		this.setupKeyListeners();
+		this.setupClickListeners();
 
-		//welcome dialog
+		return true;
+	}
+
+	drawWelcomeDialog() {
 		this.ctx.fillStyle = this.dialog.color;
 		this.ctx.fillRect(this.dialog.x, this.dialog.y, this.dialog.width, this.dialog.height);
 		this.ctx.fillStyle = BLACK;
@@ -101,11 +109,6 @@ export default class Game {
 		this.ctx.fillText('Rotate = K-key, Down = Comma-key', this.dialog.x + 35, this.dialog.y + 90, 230);
 		this.ctx.fillText('Drop = Space', this.dialog.x + 35, this.dialog.y + 110, 230);
 		this.ctx.fillText('Pause = P-key', this.dialog.x + 35, this.dialog.y + 130, 230);
-
-		this.setupKeyListeners();
-		this.setupClickListeners();
-
-		return true;
 	}
 
 	drawBoard() {
@@ -123,7 +126,7 @@ export default class Game {
 		this.ctx.fillRect(0, this.gamePanelHeight, this.panelWidth, SCORE_PANEL_HEIGHT);
 		this.ctx.font = `${LARGE_FONT_SIZE} ${FONT_FAMILY}`;
 		this.ctx.fillStyle = RED;
-		this.ctx.fillText('Score: '+ this.scoreCounter, 20, this.gamePanelHeight+40, this.panelWidth-20);
+		this.ctx.fillText('Score: '+ this.scoreCounter, 20, this.gamePanelHeight + 40, this.panelWidth - 20);
 	}
 
 	setupKeyListeners() {
@@ -177,18 +180,18 @@ export default class Game {
 
 	setupClickListeners() {
 		mainCanvas.addEventListener('click', (e) => {
-			if (this.fresh) {
-				this.fresh = false;
+			if (this.isFreshGame) {
+				this.isFreshGame = false;
 			}
 			if (!this.go){
 				this.go = true;
 			}
-			if (this.lost) {
+			if (this.isLostGame) {
 				clearInterval(this.game_loop);
 				this.game_loop = start();
-				this.lost = false
+				this.isLostGame = false
 				this.go = false;
-				this.fresh = true;
+				this.isFreshGame = true;
 			}
 		});
 	}
@@ -205,7 +208,7 @@ export default class Game {
 			this.currPiece.draw();
 		} else {
 			// game is paused
-			if(!this.lost && !this.fresh){
+			if(!this.isLostGame && !this.isFreshGame) {
 	 			this.ctx.fillStyle = this.dialog.color;
 				this.ctx.fillRect(this.dialog.x, this.dialog.y, this.dialog.width, this.dialog.height);
 				this.ctx.fillStyle = BLACK;
@@ -213,7 +216,7 @@ export default class Game {
 				this.ctx.fillText('Game Paused.', this.dialog.x + 65, this.dialog.y+80, 280);
 			}
 			// game is over
-			else if (this.lost && !this.fresh) {
+			else if (this.isLostGame && !this.isFreshGame) {
 				this.ctx.fillStyle= this.dialog.color;
 				this.ctx.fillRect(this.dialog.x, this.dialog.y, this.dialog.width, this.dialog.height);
 				this.ctx.fillStyle = BLACK;
@@ -254,7 +257,7 @@ export default class Game {
 
 	makeNewPiece() {
 		this.currPiece = this.pieceFactory(this);
-		if (!this.lost) {
+		if (!this.isLostGame) {
 			this.currPiece.setLocation(NEW_PIECE_X, NEW_PIECE_Y);
 		}
 	}
@@ -288,12 +291,12 @@ export default class Game {
 				}
 				this.scoreCounter = this.scoreCounter + NORMAL_CLEAR_PTS;
 				//one tetris
-				if (numCleared === 4 && !this.tetris) {
+				if (numCleared === NUM_FOR_TETRIS && !this.tetris) {
 					this.scoreCounter = this.scoreCounter + TETRIS_CLEAR_PTS;
 					this.tetris = true;
 				}
 				//back to back tetrises!!!
-				else if (numCleared === 4 && this.tetris) {
+				else if (numCleared === NUM_FOR_TETRIS && this.tetris) {
 					this.scoreCounter = this.scoreCounter + DOUBLE_TETRIS_CLEAR_PTS;
 				}
 				else {
@@ -304,10 +307,10 @@ export default class Game {
 	}
 
 	checkLoss() {
-		for (let s = 0; s < 4; s++) {
+		for (let s = 0; s < NUM_PIECE_SQS; s++) {
 			if (this.board[this.currPiece.sqArray[s][0]][this.currPiece.sqArray[s][1]]){
 				this.go = false;
-				this.lost = true;
+				this.isLostGame = true;
 				this.draw()
 			}
 		}

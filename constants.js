@@ -18,6 +18,7 @@ export const SPEED_UP_AMT = 50;
 export const TOP_SPEED = 100;
 
 export const NORMAL_CLEAR_PTS = 10;
+export const NUM_FOR_TETRIS = 4;
 export const TETRIS_CLEAR_PTS = 100;
 export const DOUBLE_TETRIS_CLEAR_PTS = 500;
 
@@ -38,4 +39,4 @@ export const NEW_PIECE_Y = 1;
 export const LARGE_FONT_SIZE = '30px';
 export const MEDIUM_FONT_SIZE = '22px';
 export const SMALL_FONT_SIZE = '14px';
-export const FONT_FAMILY = 'Century Gothic, Calibri';
+export const FONT_FAMILY = 'Avenir, Helvetica, Arial';

@@ -8,8 +8,8 @@ export default class App {
 	start() {
 		this.game = new Game();
 
-		let play = () => {
-	  	this.game.draw();
+		const play = () => {
+	  	window.requestAnimationFrame(this.game.draw.bind(this.game));
 	  	setTimeout(play, this.game.speediness);
 	   	if (this.game.go) {
 	   		this.game.currPiece.moveDown();
@@ -24,6 +24,4 @@ export default class App {
 	}
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-	new App();
-});
+document.addEventListener('DOMContentLoaded', () => new App());

@@ -7,5 +7,5 @@ export default class Dialog {
     this.x = DIALOG_X;
     this.y = DIALOG_Y;
     this.color = RED;
-  };
+  }
 };
