@@ -31,6 +31,7 @@ import {INITIAL_SPEED,
         NUM_FOR_TETRIS,
         TETRIS_CLEAR_PTS,
         DOUBLE_TETRIS_CLEAR_PTS,
+        SPEED_UP_AMT,
         TOP_SPEED,
         RED,
         TEAL} from './constants.js';

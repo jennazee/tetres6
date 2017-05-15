@@ -23,7 +23,8 @@
   },
   "browserify": {
     "transform": [
-      "babelify"
+      "babelify",
+      "uglifyify"
     ]
   },
   "homepage": "https://github.com/jennazee/tetres6#readme"
